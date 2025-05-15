@@ -21,11 +21,9 @@ void SeqListPrint(SL* ps)
 	}printf("\n");
 }
 
-//尾插
-void SeqListPushBack(SL* ps, SLDataType x)
+//检查是否需要扩容
+void SeqListCheckSize(SL* ps)
 {
-	assert(ps);//确保ps不为NULL否则终止程序
-	//如果满了要增容
 	if (ps->size >= ps->capacity)
 	{
 		ps->capacity *= 2;
@@ -37,25 +35,25 @@ void SeqListPushBack(SL* ps, SLDataType x)
 		}
 
 	}
+}
+
+
+
+//尾插
+void SeqListPushBack(SL* ps, SLDataType x)
+{
+	assert(ps);//确保ps不为NULL否则终止程序
+	//如果满了要增容
+	SeqListCheckSize(&ps);
 	ps->a[ps->size] = x;
 	ps->size++;
 }
 
 //头插
-void SeqListPushFront(SL* ps, SLDataType x) 
+void SeqListPushFront(SL* ps, SLDataType x)
 {
 	assert(ps);
-	if (ps->size >= ps->capacity)
-	{
-
-		ps->capacity *= 2;
-		ps->a = (SLDataType*)realloc(ps->a,sizeof(SLDataType) * ps->capacity);
-		if (ps->a == NULL)
-		{
-			printf("扩容失败\n");
-			exit(-1);
-		}
-	}
+	SeqListCheckSize(&ps);
 	for (int i = ps->size; i > 0;i--)
 	{
 		ps->a[i] = ps->a[i - 1];
@@ -70,9 +68,77 @@ void SeqListPopBack(SL* ps)
 	assert(ps);
 	ps->size--;
 }
-//void SeqListPopFront(SL* ps);
 
-////任意位置的插入删除
-//void SeqListInsert(SL* ps, int pos, SLDataType x);
-//void SeqListErase(SL* ps, int pos);
+//头删
+void SeqListPopFront(SL* ps)
+{
+	assert(ps);
+	for (int i = 0; i < ps->size - 1; i++)
+	{
+		ps->a[i] = ps->a[i + 1];
+	}
+	ps->size--;
+}
 
+//任意位置的插入
+void SeqListInsert(SL* ps, int pos, SLDataType x)
+{
+	assert(ps);
+	SeqListCheckSize(&ps);
+	if (pos < 0 || pos > ps->size)
+	{
+		printf("插入出错！");
+		exit(-1);
+	}
+	for (int i = ps->size; i >= pos; i--)
+	{
+		ps->a[i] = ps->a[i - 1];
+	}
+	ps->a[pos - 1] = x;
+	ps->size++;
+}
+
+//任意位置的删除
+void SeqListErase(SL* ps, int pos)
+{
+	assert(ps);
+	if (pos<0 || pos > ps->size)
+	{
+		printf("删除错误！");
+		exit(-1);
+	}
+	for (int i = pos - 1;i <= ps->size - 1;i++)
+	{
+		ps->a[i] = ps->a[i + 1];
+	}
+	ps->size--;
+}
+
+//移除数组中的元素
+int removeElement(SL* ps, int val)
+{
+	int i = 0;
+	int j = 0;
+	int sum = 0;
+	while (i < ps->size)
+	{
+		j = i;
+		if (ps->a[i] != val)
+		{
+			i++;
+			j++;
+		}
+		while (ps->a[i] == val)
+		{
+			i++;
+			sum++;
+		}
+		while (i < ps->size && ps->a[i] != val)
+		{
+			ps->a[j] = ps->a[i];
+			j++;i++;
+		}
+	}
+	ps->size = ps->size - sum;
+	return ps->size;
+}
