@@ -15,6 +15,8 @@ typedef struct SeqList
 
 //初始化
 void SeqListInit(SL* ps);
+//注销顺序表
+void SeqListDestory(SL* ps);
 
 //顺序表打印
 void SeqListPrint(SL* ps);

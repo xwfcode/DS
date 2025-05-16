@@ -11,6 +11,14 @@ void SeqListInit(SL* ps)
 	ps->capacity = 4;
 }
 
+//销毁顺序表
+void SeqListDestory(SL* ps)
+{
+	free(ps->a);//给指针所指向的空间给释放掉
+	ps->a = NULL;//防止野指针
+	ps->size = ps->capacity = 0;
+}
+
 //顺序表打印
 void SeqListPrint(SL* ps)
 {
@@ -44,7 +52,7 @@ void SeqListPushBack(SL* ps, SLDataType x)
 {
 	assert(ps);//确保ps不为NULL否则终止程序
 	//如果满了要增容
-	SeqListCheckSize(&ps);
+	SeqListCheckSize(ps);
 	ps->a[ps->size] = x;
 	ps->size++;
 }
@@ -53,7 +61,7 @@ void SeqListPushBack(SL* ps, SLDataType x)
 void SeqListPushFront(SL* ps, SLDataType x)
 {
 	assert(ps);
-	SeqListCheckSize(&ps);
+	SeqListCheckSize(ps);
 	for (int i = ps->size; i > 0;i--)
 	{
 		ps->a[i] = ps->a[i - 1];
@@ -84,7 +92,7 @@ void SeqListPopFront(SL* ps)
 void SeqListInsert(SL* ps, int pos, SLDataType x)
 {
 	assert(ps);
-	SeqListCheckSize(&ps);
+	SeqListCheckSize(ps);
 	if (pos < 0 || pos > ps->size)
 	{
 		printf("插入出错！");
